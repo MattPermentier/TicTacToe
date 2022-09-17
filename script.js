@@ -26,16 +26,7 @@ function clickedSquare(e) {
   const player = playerType(num);
 }
 
-const playerType = (num) => {
-  target.classList.add('taken');
-  if (num % 2 == 0) {
-    target.innerHTML = 'x';
-    target.classList.add('x');
-  } else {
-    target.innerHTML = 'o';
-    target.classList.add('o');
-  }
-
+function winner() {
   if (
     (checkWinner(0, 'x') && checkWinner(1, 'x') && checkWinner(2, 'x')) ||
     (checkWinner(0, 'o') && checkWinner(1, 'o') && checkWinner(2, 'o'))
@@ -77,4 +68,16 @@ const playerType = (num) => {
   ) {
     console.log('We have a winner');
   }
+}
+
+const playerType = (num) => {
+  target.classList.add('taken');
+  if (num % 2 == 0) {
+    target.innerHTML = 'x';
+    target.classList.add('x');
+  } else {
+    target.innerHTML = 'o';
+    target.classList.add('o');
+  }
+  winner();
 };
