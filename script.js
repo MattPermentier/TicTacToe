@@ -26,16 +26,8 @@ let gameRules = {
     let typesOne = document.querySelectorAll(`[data-type="1"]`);
     let typesTwo = document.querySelectorAll(`[data-type="2"]`);
 
-    // typesZero = Array.from(typesZero); // type
-    // let check = typesZero.every((item) => { // type
-    //   return item.classList.contains('o'); // x or y
-    // });
-
-    // if (check === true) {
-    //   playerTurn.innerHTML = 'O wins';
-    // }
-
-    function testWinner(type, xO) {
+    // check for vertical winners
+    function verticalWinner(type, xO) {
       type = Array.from(type); // type
       let check = type.every((item) => {
         // type
@@ -47,64 +39,32 @@ let gameRules = {
         playerTurn.innerHTML = `${playerWin} wins`;
       }
     }
-    testWinner(typesZero, 'x');
-    testWinner(typesOne, 'x');
-    testWinner(typesTwo, 'x');
+    // check for horizontal & cross winners
+    function horizontalCrossWinner(row, xO) {
+      let horizontal = typesZero[row] && typesOne[row] && typesTwo[row];
+      if (horizontal.classList.contains(xO)) {
+        let playerWin = xO.toUpperCase(0);
+        playerTurn.innerHTML = `${playerWin} wins`;
+      }
+    }
+    verticalWinner(typesZero, 'x');
+    verticalWinner(typesOne, 'x');
+    verticalWinner(typesTwo, 'x');
 
-    testWinner(typesZero, 'o');
-    testWinner(typesOne, 'o');
-    testWinner(typesTwo, 'o');
+    verticalWinner(typesZero, 'o');
+    verticalWinner(typesOne, 'o');
+    verticalWinner(typesTwo, 'o');
 
-    // if (
-    //   (checkWinner(0, 'x') && checkWinner(1, 'x') && checkWinner(2, 'x')) ||
-    //   (checkWinner(0, 'o') && checkWinner(1, 'o') && checkWinner(2, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   console.log(gameBoard);
-    //   return true;
-    // } else if (
-    //   (checkWinner(3, 'x') && checkWinner(4, 'x') && checkWinner(5, 'x')) ||
-    //   (checkWinner(3, 'o') && checkWinner(4, 'o') && checkWinner(5, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   return true;
-    // } else if (
-    //   (checkWinner(6, 'x') && checkWinner(7, 'x') && checkWinner(8, 'x')) ||
-    //   (checkWinner(6, 'o') && checkWinner(7, 'o') && checkWinner(8, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   return true;
-    // } else if (
-    //   (checkWinner(0, 'x') && checkWinner(3, 'x') && checkWinner(6, 'x')) ||
-    //   (checkWinner(0, 'o') && checkWinner(3, 'o') && checkWinner(6, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   return true;
-    // } else if (
-    //   (checkWinner(1, 'x') && checkWinner(4, 'x') && checkWinner(7, 'x')) ||
-    //   (checkWinner(1, 'o') && checkWinner(4, 'o') && checkWinner(7, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   return true;
-    // } else if (
-    //   (checkWinner(2, 'x') && checkWinner(5, 'x') && checkWinner(8, 'x')) ||
-    //   (checkWinner(2, 'o') && checkWinner(5, 'o') && checkWinner(8, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   return true;
-    // } else if (
-    //   (checkWinner(0, 'x') && checkWinner(4, 'x') && checkWinner(8, 'x')) ||
-    //   (checkWinner(0, 'o') && checkWinner(4, 'o') && checkWinner(8, 'o'))
-    // ) {
-    //   console.log('We have a winner!');
-    //   return true;
-    // } else if (
-    //   (checkWinner(2, 'x') && checkWinner(4, 'x') && checkWinner(6, 'x')) ||
-    //   (checkWinner(2, 'o') && checkWinner(4, 'o') && checkWinner(6, 'o'))
-    // ) {
-    //   console.log('We have a winner');
-    //   return true;
-    // }
+    horizontalCrossWinner(0, 'x');
+    horizontalCrossWinner(1, 'x');
+    horizontalCrossWinner(2, 'x');
+
+    horizontalCrossWinner(0, 'o');
+    horizontalCrossWinner(1, 'o');
+    horizontalCrossWinner(2, 'o');
+
+    horizontalCrossWinner(0, 1, 2, 'o');
+    horizontalCrossWinner(0, 1, 2, 'x');
   },
 
   tieGame: function () {
