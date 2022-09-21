@@ -11,12 +11,19 @@ let num = 0;
 
 // gameBoard object to store all squares in
 let gameBoard = {
+  pushToArray: function () {
+    for (const playingSquare of playingSquares) {
+      gameBoard.board.push(playingSquare);
+    }
+  },
   board: [],
 };
+gameBoard.pushToArray();
 
-// function to get code cleaner and checks where x/o is placed in gameBoard
-function checkWinner(num, xOrY) {
-  return gameBoard.board[num].classList.contains(xOrY);
+// message when a player wins the game
+function winnerMessage(xO) {
+  let playerWin = xO.toUpperCase(0);
+  playerTurn.innerHTML = `${playerWin} wins`;
 }
 
 // gameRules object to check when player wins
@@ -28,45 +35,42 @@ let gameRules = {
 
     // check for vertical winners
     function verticalWinner(type, xO) {
-      type = Array.from(type); // type
+      type = Array.from(type);
       let check = type.every((item) => {
-        // type
-        return item.classList.contains(xO); // x or y
+        return item.classList.contains(xO);
       });
-
-      if (check === true) {
-        let playerWin = xO.toUpperCase(0);
-        playerTurn.innerHTML = `${playerWin} wins`;
-      }
-    }
-    // check for horizontal & cross winners
-    function horizontalCrossWinner(row, xO) {
-      let horizontal = typesZero[row] && typesOne[row] && typesTwo[row];
-      if (horizontal.classList.contains(xO)) {
-        let playerWin = xO.toUpperCase(0);
-        playerTurn.innerHTML = `${playerWin} wins`;
-      }
+      return check === true ? winnerMessage(xO) : '';
     }
     verticalWinner(typesZero, 'x');
     verticalWinner(typesOne, 'x');
     verticalWinner(typesTwo, 'x');
-
     verticalWinner(typesZero, 'o');
     verticalWinner(typesOne, 'o');
     verticalWinner(typesTwo, 'o');
 
-    horizontalCrossWinner(0, 'x');
-    horizontalCrossWinner(1, 'x');
-    horizontalCrossWinner(2, 'x');
+    function horizontalCrossWinner(type1, type2, type3, xO) {
+      let one = typesZero[type1].classList.contains(xO);
+      let two = typesOne[type2].classList.contains(xO);
+      let three = typesTwo[type3].classList.contains(xO);
 
-    horizontalCrossWinner(0, 'o');
-    horizontalCrossWinner(1, 'o');
-    horizontalCrossWinner(2, 'o');
+      if (one && two && three) {
+        winnerMessage(xO);
+      }
+    }
+    // horizontal winners
+    horizontalCrossWinner(0, 0, 0, 'o');
+    horizontalCrossWinner(1, 1, 1, 'o');
+    horizontalCrossWinner(2, 2, 2, 'o');
+    horizontalCrossWinner(0, 0, 0, 'x');
+    horizontalCrossWinner(1, 1, 1, 'x');
+    horizontalCrossWinner(2, 2, 2, 'x');
 
-    horizontalCrossWinner(0, 1, 2, 'o');
+    // cross winners
     horizontalCrossWinner(0, 1, 2, 'x');
+    horizontalCrossWinner(0, 1, 2, 'o');
+    horizontalCrossWinner(2, 1, 0, 'x');
+    horizontalCrossWinner(2, 1, 0, 'o');
   },
-
   tieGame: function () {
     let taken = document.getElementsByClassName('taken');
     if (taken.length === 9 && gameRules.bestPlayer() !== true) {
@@ -74,11 +78,6 @@ let gameRules = {
     }
   },
 };
-
-// loop over all squares and push them individually in the gameBoard array
-for (const playingSquare of playingSquares) {
-  gameBoard.board.push(playingSquare);
-}
 
 // check if square is already filled and make a new x/o
 function clickedSquare(e) {
@@ -94,6 +93,7 @@ function clickedSquare(e) {
   gameRules.tieGame();
 }
 
+// choose between player 'x' or 'o'
 const playerType = (num) => {
   target.classList.add('taken');
 
@@ -106,6 +106,7 @@ const playerType = (num) => {
       (playerTurn.innerHTML = "Player X's turn"));
 };
 
+// onclick restart the game
 function restartGame() {
   for (const playingSquare of playingSquares) {
     playingSquare.innerHTML = '';
