@@ -3,9 +3,12 @@ let playingSquares = document.querySelectorAll('.playingSquare');
 let playerTurn = document.getElementById('playerTurn');
 const restartBtn = document.getElementById('restart');
 
+// event listeners
 playingField.addEventListener('click', clickedSquare);
 restartBtn.addEventListener('click', restartGame);
 
+// global variables
+let playingSquare;
 let target;
 let num = 0;
 
@@ -24,6 +27,10 @@ gameBoard.pushToArray();
 function winnerMessage(xO) {
   let playerWin = xO.toUpperCase(0);
   playerTurn.innerHTML = `${playerWin} wins`;
+  playingSquares.forEach((playingSquare) => {
+    playingSquare.disabled = true;
+    playingSquare.style.color = '#46494b';
+  });
 }
 
 // gameRules object to check when player wins
@@ -74,7 +81,7 @@ let gameRules = {
   tieGame: function () {
     let taken = document.getElementsByClassName('taken');
     if (taken.length === 9 && gameRules.bestPlayer() !== true) {
-      console.log('tie game');
+      playerTurn.innerHTML = 'Tie game';
     }
   },
 };
@@ -84,7 +91,6 @@ function clickedSquare(e) {
   target = e.target;
 
   if (target.classList.contains('taken')) {
-    alert('This square is already taken');
     return;
   }
   num++;
@@ -113,5 +119,6 @@ function restartGame() {
     playingSquare.classList.remove('taken', 'x', 'o');
     playerTurn.innerHTML = "Player O's turn";
     num = 0;
+    playingSquare.disabled = false;
   }
 }
