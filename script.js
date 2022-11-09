@@ -2,6 +2,7 @@ const playingField = document.getElementById('playingField');
 let playingSquares = document.querySelectorAll('.playingSquare');
 let playerTurn = document.getElementById('playerTurn');
 const restartBtn = document.getElementById('restart');
+let taken = document.getElementsByClassName('taken');
 
 // event listeners
 playingField.addEventListener('click', clickedSquare);
@@ -11,6 +12,7 @@ restartBtn.addEventListener('click', restartGame);
 let playingSquare;
 let target;
 let num = 0;
+let winner = false;
 
 // gameBoard object to store all squares in
 let gameBoard = {
@@ -46,8 +48,14 @@ let gameRules = {
       let check = type.every((item) => {
         return item.classList.contains(xO);
       });
-      return check === true ? winnerMessage(xO) : '';
+      // return check === true ? winnerMessage(xO) : '';
+      if (check === true) {
+        winnerMessage(xO);
+        winner = true;
+      }
     }
+
+    // run functions to test to see if there is a vertical winner
     verticalWinner(typesZero, 'x');
     verticalWinner(typesOne, 'x');
     verticalWinner(typesTwo, 'x');
@@ -62,6 +70,7 @@ let gameRules = {
 
       if (one && two && three) {
         winnerMessage(xO);
+        winner = true;
       }
     }
     // horizontal winners
@@ -79,17 +88,15 @@ let gameRules = {
     horizontalCrossWinner(2, 1, 0, 'o');
   },
   tieGame: function () {
-    let taken = document.getElementsByClassName('taken');
-    if (taken.length === 9 && gameRules.bestPlayer() !== true) {
-      playerTurn.innerHTML = 'Tie game';
+    if (taken.length === 9 && winner == false) {
+      playerTurn.innerHTML = 'No winner, play again';
     }
   },
 };
-
 // check if square is already filled and make a new x/o
 function clickedSquare(e) {
   target = e.target;
-
+  console.log(taken.length);
   if (target.classList.contains('taken')) {
     return;
   }
